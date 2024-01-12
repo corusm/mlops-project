@@ -1,5 +1,5 @@
 provider "google" {
-  region = "europe-west2"  # Example GCP region
+  region = "europe-west2"
   project = "dtumlops-410010"
 }
 
@@ -25,6 +25,6 @@ resource "google_service_account_key" "dvc_service_account_key" {
 }
 
 output "secret" {
-    sensitive = true # later change to true
+    sensitive = true
     value = google_service_account_key.dvc_service_account_key.private_key
 }
