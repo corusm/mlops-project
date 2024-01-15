@@ -1,5 +1,9 @@
 # Terraform GCP Infrastructure
 
+## GCP Setup
+1. Install `gcloud`-CLI
+2. Login to `gcloud`-CLI as described [here](https://dvc.org/doc/user-guide/data-management/remote-storage/google-cloud-storage)
+
 ## Parts
 - `gcp_dvc_bucket.tf` - DVC Bucket Infrastructure
 
