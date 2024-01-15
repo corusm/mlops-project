@@ -48,23 +48,23 @@ class Forecaster:
 
         X, y, preproc_pipe, exp_pipe, splits = self.get_data(PATH_PROCESSED)
 
-        learn = TSForecaster(
-            X,
-            y,
-            splits=splits,
-            batch_size=16,
-            path="models",
-            pipelines=[preproc_pipe, exp_pipe],
-            arch="PatchTST",
-            arch_config=self.arch_config,
-            metrics=[mse, mae],
-            cbs=WandbCallback()
-        )
-
-        n_epochs = 20
-        lr_max = 0.0025
-
         with wandb.init(project="62-train"):
+            learn = TSForecaster(
+                X,
+                y,
+                splits=splits,
+                batch_size=16,
+                path="models",
+                pipelines=[preproc_pipe, exp_pipe],
+                arch="PatchTST",
+                arch_config=self.arch_config,
+                metrics=[mse, mae],
+                cbs=WandbCallback()
+            )
+
+            n_epochs = 20
+            lr_max = 0.0025
+
             learn.fit_one_cycle(n_epochs, lr_max=lr_max)
             
             # save model
