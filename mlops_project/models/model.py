@@ -1,5 +1,8 @@
 from tsai.basics import *
 
+import wandb
+from fastai.callback.wandb import *
+
 # By using tsai module the model can be reduced just to the architecture definition.
 
 
@@ -55,13 +58,16 @@ class Forecaster:
             arch="PatchTST",
             arch_config=self.arch_config,
             metrics=[mse, mae],
+            cbs=WandbCallback()
         )
 
         n_epochs = 20
         lr_max = 0.0025
-        learn.fit_one_cycle(n_epochs, lr_max=lr_max)
 
-        # save model
-        learn.export("patchTST.pt")
+        with wandb.init(project="62-train"):
+            learn.fit_one_cycle(n_epochs, lr_max=lr_max)
+            
+            # save model
+            learn.export("patchTST.pt")
 
         # TODO make a plot
