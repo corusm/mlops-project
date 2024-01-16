@@ -35,11 +35,6 @@ jobs:
         service_account: 'github-actions@dtumlops-g62v2.iam.gserviceaccount.com'
         token_format: "access_token"
 
-    # Test smth different
-    - name: "Docker auth"
-      run: |-
-                gcloud auth configure-docker asia-southeast1-docker.pkg.dev --quiet  
-
     - name: Get data
       run: dvc pull
       # resource: https://github.com/google-github-actions/auth#preferred-direct-workload-identity-federation
