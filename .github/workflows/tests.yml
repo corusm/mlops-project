@@ -30,6 +30,10 @@ jobs:
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 
+    - name: Debug GCP Credentials
+      run: |
+        echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+
     # - name: Cache Python dependecies
     #   uses: actions/cache@v2
     #   with:
