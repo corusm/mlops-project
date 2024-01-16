@@ -8,6 +8,9 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
     runs-on: ${{ matrix.os }}
     strategy:
@@ -29,9 +32,6 @@ jobs:
       with:
         workload_identity_provider: 'projects/311990494126/locations/global/workloadIdentityPools/github/providers/my-repo'
         project_id: 'dtumlops-g62v2'
-      permissions:
-        contents: 'read'
-        id-token: 'write'
     - name: Get data
       run: dvc pull
       # resource: https://github.com/google-github-actions/auth#preferred-direct-workload-identity-federation
