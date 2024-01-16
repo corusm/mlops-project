@@ -23,17 +23,12 @@ jobs:
       with:
         python-version: 3.11
 
-    # TODO: remove when setup
-    - name: Debug GCP Credentials
-      run: |
-        echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' | base64 -d > gcp-credentials.json
-
     # TODO uncomment when the dvc will be set up
     - uses: iterative/setup-dvc@v1
     - name: Get data
-      run: dvc pull
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: $(pwd)/gcp-credentials.json
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+      run: dvc pull
 
     # - name: Cache Python dependecies
     #   uses: actions/cache@v2
