@@ -62,22 +62,22 @@ end of the project.
 * [X] Setup version control for your data or part of your data
 * [X] Construct one or multiple docker files for your code
 * [X] Build the docker files locally and make sure they work as intended
-* [ ] Write one or multiple configurations files for your experiments
+* [X] Write one or multiple configurations files for your experiments
 * [ ] Used Hydra to load the configurations and manage your hyperparameters
 * [ ] When you have something that works somewhat, remember at some point to to some profiling and see if
       you can optimize your code
 * [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code. Additionally,
       consider running a hyperparameter optimization sweep.
-* [ ] Use Pytorch-lightning (if applicable) to reduce the amount of boilerplate in your code
+* [X] Use Pytorch-lightning (if applicable) to reduce the amount of boilerplate in your code
 
 ### Week 2
 
 * [X] Write unit tests related to the data part of your code
 * [X] Write unit tests related to model construction and or model training
 * [X] Calculate the coverage. (14.01 -> 97%)
-* [ ] Get some continuous integration running on the github repository
-* [ ] Create a data storage in GCP Bucket for you data and preferable link this with your data version control setup
-* [ ] Create a trigger workflow for automatically building your docker images
+* [X] Get some continuous integration running on the github repository
+* [X] Create a data storage in GCP Bucket for you data and preferable link this with your data version control setup
+* [X] Create a trigger workflow for automatically building your docker images
 * [ ] Get your model training in GCP using either the Engine or Vertex AI
 * [ ] Create a FastAPI application that can do inference using your model
 * [ ] If applicable, consider deploying the model locally using torchserve
@@ -105,7 +105,7 @@ end of the project.
 >
 > Answer:
 
---- question 1 fill here ---
+--- 62 ---
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -116,7 +116,7 @@ end of the project.
 >
 > Answer:
 
---- question 2 fill here ---
+--- s232429, s232002, s231954 ---
 
 ### Question 3
 > **What framework did you choose to work with and did it help you complete the project?**
@@ -129,7 +129,7 @@ end of the project.
 >
 > Answer:
 
---- question 3 fill here ---
+--- We used the third-party framework "tsai", it is an open-source deep learning package built on top of Pytorch & fastai focused on state-of-the-art techniques for time series tasks like classification, regression, forecasting, imputation etc. It is actively developed by timeseriesAI. We used already build in model (TSForecaster class), from tsai to define our model, we also used build in functions like fit_one_cycle() from the same package to train our model or get_forecasting_splits() to split data, which facilitated development process significantly. Standard functionalities from popular packages like sklearn or numpy were also used. Moreover we used tutorials provided by timeseriesAI to develop and align our model. ---
 
 ## Coding environment
 
@@ -148,7 +148,11 @@ end of the project.
 >
 > Answer:
 
---- question 4 fill here ---
+--- We used conda for managing our dependencies. The list of dependencies was auto-generated using pipreqs. At the beginning of the project we agreed to use version 3.11 of python. Dependencies were updated on the ongoing basis via github, so whenever they changed on our master branch each contributor were able to update them locally. To get a complete copy of our development environment, one would have to run the following commands:
+1. Install conda (might differ among different operating systems, please refer to the official documentation)
+2. conda create -n myenv python=3.11
+3. conda activate myenv
+4. pip install -r requirements.txt ---
 
 ### Question 5
 
@@ -163,7 +167,7 @@ end of the project.
 > *experiments.*
 > Answer:
 
---- question 5 fill here ---
+--- From the cookiecutter template we have filled out every provided folder, beside docs. At the moment of reading this report it might be filled in, however we left it as the last thing to do. The "models" folder might be empty, however we were actively using it to store our models (in .pt format) locally, we didn't push changes within this folder to keep our repository neat. We have added "notebooks" directory where we have been experimenting with our model, the notebook is aligned copy of the jupyter nb provided by tsai. The "insfrastructure" directory was also added in order to setup GCP and deploy. ---
 
 ### Question 6
 
@@ -174,7 +178,7 @@ end of the project.
 >
 > Answer:
 
---- question 6 fill here ---
+--- We used mainly ruff formating top be complaiant with PEP8. These concepts are helpful even in the smaller projects like this one, with the bigger ones I would risk to say that they are inevitable. They simply facelitate the entire work, as each developer knows what to expect from code. ---
 
 ## Version control
 
@@ -193,7 +197,7 @@ end of the project.
 >
 > Answer:
 
---- question 7 fill here ---
+--- In total we have implemented 7 tests. We are testing corectness of data such as if data arrays have expected shapes, if types are as expected, if all values are represented (no infinite or Nan values etc.). Moreover we are testing main model fuctionalities such as data loading, training or model saving. ---
 
 ### Question 8
 
@@ -208,7 +212,7 @@ end of the project.
 >
 > Answer:
 
---- question 8 fill here ---
+--- The total code coverage of code is 97%, it was tested with "coverage" tool on all our source code. Even though this value is close to 100%, we are more than certain that our code is not error-free. Our unit tests cover almost every line, demonstrating which indicates that they can run without an error. However, they have their limitations. They might ensure each line is executed, but they don't encompass every possible way these lines might be used in real-world scenarios. This is a critical distinction because real-world usage often presents cases that our controlled test environments fail to anticipate. ---
 
 ### Question 9
 
@@ -223,7 +227,7 @@ end of the project.
 >
 > Answer:
 
---- question 9 fill here ---
+--- In our project, we used both branches and pull requests (PRs). For each separate feature, we created a dedicated branch, and following its merge, we removed it from the main repository. The main branch was our base, and all contributions to it were strictly through PRs. This process involved reviews of the most important features before their integration. Additionally, our workflow often included working on separate forks, providing a parallel development environment. This approach allowed us to maintain a clean, organized codebase and facilitated efficient collaboration among team members. This methodology is used to carefully manage code via review of code changes to ensure quality and consistency in project development. ---
 
 ### Question 10
 
@@ -238,7 +242,8 @@ end of the project.
 >
 > Answer:
 
---- question 10 fill here ---
+--- We did make use of DVC in the following way:
+ ---
 
 ### Question 11
 
@@ -254,7 +259,24 @@ end of the project.
 >
 > Answer:
 
---- question 11 fill here ---
+--- We have organised our CI into two files in which we are testing the corectness of the data and main model functionalities as well compatibility with good coding practicies. We are running unitesting (7 tests in total) and ruff. In both cases we are running our pipeline on push event and pull request to master branch. 
+
+CI for unit tests:
+We are testing it for ubuntu, macos and windows operating systems (all marked as latest). In the test we are setting up the entire development, then we are installing dependecies. Throughout this process we are making use of cashing, which improves tests speed. Finally we are testing our code with pytest
+
+An example of triggered workflow can be seen here:
+https://github.com/corusm/mlops-project/actions/runs/7530338558/job/20496483800
+
+
+CI for ruff:
+We are also continously checking our code compatibilty with good coding practicies. We decided to use ruff due to it's speed, it was configured to keep line width of 120 lines (configured in pyproject.toml file). Entire process is very simmilar to the one described with unittesting.
+1. We are testing on Windows, MacOS and Ubuntu
+2. Installing dependencies utilizing caching
+3. running 'ruff check' and 'ruff format' on the entire code.
+
+An example of triggered workflow can be seen here:
+https://github.com/corusm/mlops-project/actions/runs/7535717724/job/20512110831?pr=9
+ ---
 
 ## Running code and tracking experiments
 
@@ -320,7 +342,11 @@ end of the project.
 >
 > Answer:
 
---- question 15 fill here ---
+--- For our project we developed several docker images: one for training and one for inference.
+
+Docker image for training: Inside this container we are running three scripsts one after another (make_dataset -> train_model -> visualize). Link to the docker:
+
+Docker image for inference: TODO add description (and Docker)  ---
 
 ### Question 16
 
@@ -335,7 +361,8 @@ end of the project.
 >
 > Answer:
 
---- question 16 fill here ---
+--- Each member has it's own method for debugging, however what is common for all of us is the love for the print statement as it solved for us most of the problems. To track more complex bugs we used build in debugger for VS Code. 
+In terms of profiling - we checked our code once, CPU spends the most time on running cudaLauchKernel (~20%), which is expected since it is called to lauch a device fuction, which is a code that is run on a GPU. Moreover we are spending some time on the following operations: aten::linear (most of the time is spend in the fuctions it calls), aten::im2col (used to reformat data) and aten::matmul (used for matrix multiplication). We didn't spend time to improve these results, since we considered them to be reasonable. ---
 
 ## Working in the cloud
 
@@ -474,7 +501,16 @@ end of the project.
 >
 > Answer:
 
---- question 26 fill here ---
+--- The biggest challenges in the project was to use the third party module provided by TSAI as well as integrating everything in the google cloud.
+
+Using TSAI module: 
+Since it is relatively new product we have a feeling that it is still not mature enough, or we would have to work with it for much more time to use it effectively. Tutorials provided on their website are very helpful, however we felt like we are a little bit restrained by not knowing all of the possible functionalities. To overcome these features we followed provided tutorials quite tightly, which took a lot of flexibility from us.
+To sum up -> framework is great and helps a lot, however we think that we could achieve much better results if it would be a little bit more user friendly.
+
+Using google cloud:
+None of us has previously used Google Cloud in a serious way and we came up with a conclusion, that it is quite unituitive and over complicated. We can't say that it is hard, more like time consuming, especially for newcomers. It is probably the same with AWS if one is doing it for the first time (so we might be just a little bit biased). We don't think that it is really an issue, however to overcome it we simply spend more time on it.
+
+---
 
 ### Question 27
 
@@ -491,4 +527,11 @@ end of the project.
 >
 > Answer:
 
---- question 27 fill here ---
+--- All members contributed to code by 33.3 %
+ 
+ - Student s232429 was in charge of setting up the initial cookie cutter project, adding github actions and aligning code to project structure (docker, formatting, profiling etc.)
+
+ - Student s232002 was in charge of integrating Weights & Biases to log training progress and other important metrics/artifacts in our code as well as taking care of requirements. 
+
+ - Student s231954 was in charge of GCP integration, creating a data storage in GCP Bucket with the use of DVC, deploying our model and taking care of hydra and hyperparameter control.
+ ---
