@@ -26,7 +26,8 @@ jobs:
     # TODO: remove when setup
     - name: Debug GCP Credentials
       run: |
-        echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+        echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' | base64 -d > gcp-credentials.json
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-credentials.json" >> $GITHUB_ENV
 
     # TODO uncomment when the dvc will be set up
     - uses: iterative/setup-dvc@v1
