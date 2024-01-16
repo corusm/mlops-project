@@ -28,11 +28,12 @@ jobs:
 
     - uses: iterative/setup-dvc@v1
     - name: Auth
-      uses: 'google-github-actions/auth@v2'
+      uses: 'google-github-actions/auth@v1'
       with:
         workload_identity_provider: 'projects/311990494126/locations/global/workloadIdentityPools/github/providers/my-repo'
-        project_id: 'dtumlops-g62v2'
+        # project_id: 'dtumlops-g62v2'
         service_account: 'github-actions@dtumlops-g62v2.iam.gserviceaccount.com'
+        token_format: 'access_token'
 
     - name: Get data
       run: dvc pull
