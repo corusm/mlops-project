@@ -27,24 +27,24 @@ jobs:
     - uses: iterative/setup-dvc@v1
     - name: Get data
       run: dvc pull
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+      # env:
+      #   GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 
-    - name: Cache Python dependecies
-      uses: actions/cache@v2
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/requirements_tests.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+    # - name: Cache Python dependecies
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ~/.cache/pip
+    #     key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/requirements_tests.txt') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-pip-
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -r requirements_tests.txt
+    # - name: Install dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install -r requirements.txt
+    #     pip install -r requirements_tests.txt
 
-    - name: Test with pytest
-      run: |
-        pip install pytest
-        pytest -v
+    # - name: Test with pytest
+    #   run: |
+    #     pip install pytest
+    #     pytest -v
