@@ -27,14 +27,13 @@ jobs:
     - name: Debug GCP Credentials
       run: |
         echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' | base64 -d > gcp-credentials.json
-        echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-credentials.json" >> $GITHUB_ENV
 
     # TODO uncomment when the dvc will be set up
     - uses: iterative/setup-dvc@v1
     - name: Get data
       run: dvc pull
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        GOOGLE_APPLICATION_CREDENTIALS: $(pwd)/gcp-credentials.json
 
     # - name: Cache Python dependecies
     #   uses: actions/cache@v2
