@@ -32,6 +32,7 @@ jobs:
       with:
         workload_identity_provider: 'projects/311990494126/locations/global/workloadIdentityPools/github/providers/my-repo'
         project_id: 'dtumlops-g62v2'
+        service_account: 'github-actions@dtumlops-g62v2.iam.gserviceaccount.com'
     - name: Get data
       run: dvc pull
       # resource: https://github.com/google-github-actions/auth#preferred-direct-workload-identity-federation
