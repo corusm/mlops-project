@@ -1,0 +1,5 @@
+dataset:
+  split: 0.7
+
+hyperparameters:
+  batch_size: 50

@@ -1,8 +1,10 @@
 from tsai.basics import *
 from models.model import Forecaster
+import hydra
+from omegaconf import DictConfig
 
-
-def train():
+@hydra.main(config_path="config", config_name="config")
+def train(cfg: DictConfig):
     # TODO add arguments to allow parameter tuning
     model = Forecaster()
     model.train_model()
