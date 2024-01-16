@@ -23,12 +23,17 @@ jobs:
       with:
         python-version: 3.11
 
-    # TODO uncomment when the dvc will be set up
-    - uses: iterative/setup-dvc@v1
+    - uses: iterative/setup-dvc@v2
     - name: Get data
+      uses: 'google-github-actions/auth@v0'
+      with:
+        workload_identity_provider: 'projects/311990494126/locations/global/workloadIdentityPools/github/providers/my-repo'
+        project_id: 'dtumlops-g62v2'
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
       run: dvc pull
+      # resource: https://github.com/google-github-actions/auth#preferred-direct-workload-identity-federation
+      # github issue: https://github.com/iterative/cml/issues/862#issuecomment-1107689427
 
     # - name: Cache Python dependecies
     #   uses: actions/cache@v2
