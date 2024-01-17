@@ -5,6 +5,10 @@ on:
     branches: [ master, main, dvc-gh-actions ] # remove before merge!
   pull_request:
     branches: [ master, main ]
+env:
+  PROJECT_ID: dtumlops-g62v2
+  PROJECT_NO: 311990494126
+
 
 jobs:
   build:
@@ -26,18 +30,31 @@ jobs:
       with:
         python-version: 3.11
 
-    - name: Login
-      uses: google-github-actions/setup-gcloud@v0
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
       with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
-        service_account_email: ${{ secrets.GCP_EMAIL }}
-        service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+        create_credentials_file: 'true'
+        workload_identity_provider: 'projects/${{env.PROJECT_NO}}/locations/global/workloadIdentityPools/gh-identity-pool/providers/gh-provider'
+        token_format: 'access_token'
+
+        # Below are from the above terraform code 
+        # workloadIdentityPools = gh-identity-pool
+        # providers/gh-provider'
+
+        service_account: 'gcp-github-access@${{env.PROJECT_ID}}.iam.gserviceaccount.com'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+      with:
+        version: '>= 363.0.0'
 
     - uses: iterative/setup-dvc@v1
     - name: Get data
       run: dvc pull
       # resource: https://github.com/google-github-actions/auth#preferred-direct-workload-identity-federation
       # github issue: https://github.com/iterative/cml/issues/862#issuecomment-1107689427
+      # tutorial: https://medium.com/google-cloud/keyless-authentication-to-google-cloud-from-github-actions-with-workload-identity-federation-605e725b51d
 
 
     # - name: Cache Python dependecies
