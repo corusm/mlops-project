@@ -44,7 +44,7 @@ jobs:
     runs-on: [cml-gpu]
     timeout-minutes: 50400 # 35 days
     container:
-      image: docker://adixai/python-gpu:3.11-cuda11.8
+      image: adixai/python-gpu:3.11-cuda11.8
       options: --gpus all
     steps:
       - uses: actions/checkout@v3
