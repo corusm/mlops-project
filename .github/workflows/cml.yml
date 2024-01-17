@@ -31,16 +31,17 @@ jobs:
           version: '>= 363.0.0'
 
       - name: Deploy runner on GCP
-        env:
+        env: # WHAT GPU?
           REPO_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           cml runner launch \
               --cloud=gcp \
               --cloud-region=us-central1-a \
+              --cloud-type=g2-standard-4 \
               --labels=cml-gpu
   train-and-report:
     needs: launch-runner
-    runs-on: [self-hosted, cml-gpu]
+    runs-on: [cml-gpu]
     timeout-minutes: 50400  # 35 days
     container:
       image: docker://iterativeai/cml:0-dvc2-base1-gpu
