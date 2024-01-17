@@ -44,6 +44,9 @@ jobs:
   train-and-report:
     needs: launch-runner
     runs-on: [self-hosted, cml-gpu]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     timeout-minutes: 50400 # 35 days
     container:
       image: ghcr.io/corusm/train-basemodel:latest
