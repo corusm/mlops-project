@@ -37,7 +37,6 @@ jobs:
           cml runner launch \
               --cloud=gcp \
               --cloud-region=us-central1-a \
-              --cloud-type=g2-standard-4 \
               --labels=cml-gpu
   train-and-report:
     needs: launch-runner
