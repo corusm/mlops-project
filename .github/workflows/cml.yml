@@ -45,10 +45,13 @@ jobs:
     runs-on: [cml-gpu]
     timeout-minutes: 50400 # 35 days
     container:
-      image: radixai/python-gpu:3.11-cuda11.8
+      image: ghcr.io/corusm/train-basemodel:latest
       options: --gpus all
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
       - uses: iterative/setup-dvc@v1
       - uses: iterative/setup-cml@v1
       - name: Train model
@@ -56,6 +59,5 @@ jobs:
           REPO_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY}}
         run: |
-          pip install -r requirements.txt 
           dvc pull
           python mlops_project/train_model_for_docker.py
