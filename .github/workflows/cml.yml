@@ -38,13 +38,14 @@ jobs:
               --cloud=gcp \
               --cloud-region=us-central1-a \
               --cloud-type=n1-standard-1+nvidia-tesla-k80*1 \
+              --reuse \
               --labels=cml-gpu
   train-and-report:
     needs: launch-runner
     runs-on: [cml-gpu]
     timeout-minutes: 50400 # 35 days
     container:
-      image: adixai/python-gpu:3.11-cuda11.8
+      image: radixai/python-gpu:3.11-cuda11.8
       options: --gpus all
     steps:
       - uses: actions/checkout@v3
