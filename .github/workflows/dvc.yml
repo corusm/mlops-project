@@ -1,0 +1,41 @@
+name: Run gcloud commands to list maven packages
+on:
+  push:
+    branches: [ master, main, dvc-gh-actions ] # remove before merge!
+env:
+  PROJECT_ID: dtumlops-g62v2
+  PROJECT_NO: 311990494126
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          create_credentials_file: 'true'
+          workload_identity_provider: 'projects/${{env.PROJECT_NO}}/locations/global/\
+          workloadIdentityPools/gh-identity-pool/providers/gh-provider'
+
+         # Below are from the above terraform code 
+         # workloadIdentityPools = gh-identity-pool
+         # providers/gh-provider'
+
+          service_account: 'gcp-github-access@${{env.PROJECT_ID}}.iam.gserviceaccount.com'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          version: '>= 363.0.0'
+
+      - uses: iterative/setup-dvc@v1
+      - name: Get data
+        run: dvc pull
