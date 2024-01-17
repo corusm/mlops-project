@@ -52,11 +52,23 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-python@v4
       - uses: iterative/setup-dvc@v1
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          create_credentials_file: 'true'
+          workload_identity_provider: 'projects/${{env.PROJECT_NO}}/locations/global/workloadIdentityPools/gh-identity-pool/providers/gh-provider'
+          token_format: 'access_token'
+          service_account: 'gcp-github-access@${{env.PROJECT_ID}}.iam.gserviceaccount.com'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          version: '>= 363.0.0'
       - name: Train model
         env:
           REPO_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY}}
         run: |
-          ls -la
           dvc pull
+          ls -la
           python mlops_project/train_model_for_docker.py
