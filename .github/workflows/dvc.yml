@@ -1,4 +1,4 @@
-name: Run gcloud commands to list maven packages
+name: Pull DVC Files
 on:
   push:
     branches: [ master, main, dvc-gh-actions ] # remove before merge!
