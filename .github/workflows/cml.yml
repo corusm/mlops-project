@@ -38,7 +38,7 @@ jobs:
               --cloud=gcp \
               --cloud-region=us-central1-a \
               --cloud-type=n1-standard-1+nvidia-tesla-k80*1 \
-              --idle-timeout=6000
+              --idle-timeout=6000 \
               --reuse \
               --labels=cml-gpu
   train-and-report:
