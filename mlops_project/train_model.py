@@ -1,4 +1,4 @@
-from mlops_project.models.model import Forecaster
+from models.model import Forecaster
 
 
 def train():
