@@ -43,7 +43,7 @@ jobs:
               --labels=cml-gpu 
   train-and-report:
     needs: launch-runner
-    runs-on: [cml-gpu]
+    runs-on: [self-hosted, cml-gpu]
     timeout-minutes: 50400 # 35 days
     container:
       image: ghcr.io/corusm/train-basemodel:latest
