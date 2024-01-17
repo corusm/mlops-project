@@ -22,8 +22,7 @@ jobs:
         uses: 'google-github-actions/auth@v1'
         with:
           create_credentials_file: 'true'
-          workload_identity_provider: 'projects/${{env.PROJECT_NO}}/locations/global/\
-          workloadIdentityPools/gh-identity-pool/providers/gh-provider'
+          workload_identity_provider: 'projects/${{env.PROJECT_NO}}/locations/global/workloadIdentityPools/gh-identity-pool/providers/gh-provider'
           token_format: 'access_token'
 
          # Below are from the above terraform code 
