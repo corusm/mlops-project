@@ -5,9 +5,16 @@ on:
     branches: [ master, main ]
   pull_request:
     branches: [ master, main ]
+env:
+  PROJECT_ID: dtumlops-g62v2
+  PROJECT_NO: 311990494126
+
 
 jobs:
   build:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
     runs-on: ${{ matrix.os }}
     strategy:
@@ -16,19 +23,39 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Python 3.11
       uses: actions/setup-python@v2
       with:
         python-version: 3.11
 
-    # TODO uncomment when the dvc will be set up
-    # - uses: iterative/setup-dvc@v1
-    # - name: Get data
-    #   run: dvc pull
-    #   env:
-    #     GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        create_credentials_file: 'true'
+        workload_identity_provider: 'projects/${{env.PROJECT_NO}}/locations/global/workloadIdentityPools/gh-identity-pool/providers/gh-provider'
+        token_format: 'access_token'
+
+        # Below are from the above terraform code 
+        # workloadIdentityPools = gh-identity-pool
+        # providers/gh-provider'
+
+        service_account: 'gcp-github-access@${{env.PROJECT_ID}}.iam.gserviceaccount.com'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+      with:
+        version: '>= 363.0.0'
+
+    - uses: iterative/setup-dvc@v1
+    - name: Get data
+      run: dvc pull
+    # resource: https://github.com/google-github-actions/auth#preferred-direct-workload-identity-federation
+    # github issue: https://github.com/iterative/cml/issues/862#issuecomment-1107689427
+    # tutorial: https://medium.com/google-cloud/keyless-authentication-to-google-cloud-from-github-actions-with-workload-identity-federation-605e725b51d
+
 
     - name: Cache Python dependecies
       uses: actions/cache@v2

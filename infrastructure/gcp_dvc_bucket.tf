@@ -1,6 +1,6 @@
 provider "google" {
   region = "europe-west2"
-  project = "dtumlops-410010"
+  project = "dtumlops-g62v2"
 }
 
 resource "google_storage_bucket" "b" {
@@ -15,7 +15,7 @@ resource "google_service_account" "dvc_service_account" {
 
 # assign admin role
 resource "google_project_iam_member" "service_account_admin" {
-  project = "dtumlops-410010"
+  project = "dtumlops-g62v2"
   role    = "roles/iam.serviceAccountAdmin"
   member  = "serviceAccount:${google_service_account.dvc_service_account.email}"
 }
