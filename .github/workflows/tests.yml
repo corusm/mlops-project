@@ -33,6 +33,7 @@ jobs:
         service_account_email: ${{ secrets.GCP_EMAIL }}
         service_account_key: ${{ secrets.GCP_CREDENTIALS }}
 
+    - uses: iterative/setup-dvc@v1
     - name: Get data
       run: dvc pull
       # resource: https://github.com/google-github-actions/auth#preferred-direct-workload-identity-federation
