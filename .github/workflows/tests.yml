@@ -26,14 +26,12 @@ jobs:
       with:
         python-version: 3.11
 
-    - uses: iterative/setup-dvc@v1
-    - name: Auth
-      uses: 'google-github-actions/auth@v2'
+    - name: Login
+      uses: google-github-actions/setup-gcloud@v0
       with:
-        workload_identity_provider: 'projects/311990494126/locations/global/workloadIdentityPools/github/providers/my-repo'
-        project_id: 'dtumlops-g62v2'
-        service_account: 'github-actions@dtumlops-g62v2.iam.gserviceaccount.com'
-        token_format: "access_token" 
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_email: ${{ secrets.GCP_EMAIL }}
+        service_account_key: ${{ secrets.GCP_CREDENTIALS }}
 
     - name: Get data
       run: dvc pull
