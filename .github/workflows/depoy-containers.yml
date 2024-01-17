@@ -3,6 +3,9 @@ name: Docker Build and Push
 on:
   push:
     branches: [ master, main, dev-gpucontainer ]
+env:
+  PROJECT_ID: dtumlops-g62v2
+  PROJECT_NO: 311990494126
 
 jobs:
   build-and-push:
@@ -11,6 +14,24 @@ jobs:
       contents: read
       packages: write
     steps:
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        create_credentials_file: 'true'
+        workload_identity_provider: 'projects/${{env.PROJECT_NO}}/locations/global/workloadIdentityPools/gh-identity-pool/providers/gh-provider'
+        token_format: 'access_token'
+        service_account: 'gcp-github-access@${{env.PROJECT_ID}}.iam.gserviceaccount.com'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+      with:
+        version: '>= 363.0.0'
+
+    - uses: iterative/setup-dvc@v1
+    - name: Get data
+      run: dvc pull
+
     - uses: actions/checkout@v2
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v1
