@@ -30,7 +30,7 @@ jobs:
         file: ./dockerfiles/inference.dockerfile
         tags: ghcr.io/corusm/inference:latest
 
- launch-runner:
+  launch-runner:
     needs: [ build-deploy ]
     permissions:
       contents: 'read'
