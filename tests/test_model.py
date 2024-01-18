@@ -22,7 +22,7 @@ class TestForecaster:
         return
 
     # def test_model_saving(self):
-    #     model_path = "/mlops_project/models/patchTST.pt"
+    #     model_path = "/models/patchTST.pt"
     #     if os.path.exists(model_path):
     #         os.remove(model_path)
     #     # TODO also run for 1/2 epoch
