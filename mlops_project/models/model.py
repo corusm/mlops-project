@@ -21,7 +21,7 @@ train_model(): Trains the forecasting model using the TSForecaster from tsai.
                 The model is trained and saved to models directory.
 """
 
-def get_data(path) -> tuple:
+def get_data(path) -> Any:
     feature_target_data = np.load(os.path.join(path, "processed.npz"))
     X = feature_target_data["array1"]
     y = feature_target_data["array2"]
@@ -34,7 +34,7 @@ def get_data(path) -> tuple:
 
 
 @hydra.main(config_path="configs", config_name="config")
-def train_model(cfg) -> None:
+def train_model(cfg) -> Any:
     PATH_PROCESSED = "/data/processed"
 
     X, y, preproc_pipe, exp_pipe, splits = get_data(PATH_PROCESSED)
