@@ -11,6 +11,6 @@ COPY service.py service.py
 
 WORKDIR /
 RUN pip install -r requirements.txt --no-cache-dir
-RUN pip install . --no-deps --no-cache-dir
+# RUN pip install . --no-deps --no-cache-dir
 
 ENTRYPOINT ["python", "-u", "service.py"]
