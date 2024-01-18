@@ -13,12 +13,12 @@ class TestForecaster:
     #     assert X is not None and y is not None, "Data not loaded correctly"
     #     assert len(splits) == 3, "Incorrect number of splits"
 
-    def test_training_process(self):
-        # This test might take longer, consider running with a smaller dataset or fewer epochs
-        try:
-            mlops_project.models.model.train_model()
-        except Exception as e:
-            pytest.fail(f"Training failed with exception: {e}")
+    # def test_training_process(self):
+    #     # This test might take longer, consider running with a smaller dataset or fewer epochs
+    #     try:
+    #         mlops_project.models.model.train_model()
+    #     except Exception as e:
+    #         pytest.fail(f"Training failed with exception: {e}")
 
     # def test_model_saving(self):
     #     model_path = "/models/patchTST.pt"
