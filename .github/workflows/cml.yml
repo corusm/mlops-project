@@ -36,7 +36,7 @@ jobs:
         run: |
           cml runner launch \
               --cloud=gcp \
-              --cloud-region=us-central1-a \
+              --cloud-region=europe-west1-b \
               --cloud-type=n1-standard-1+nvidia-tesla-k80*1 \
               --idle-timeout=6000 \
               --reuse \
