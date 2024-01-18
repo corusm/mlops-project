@@ -1,7 +1,7 @@
 #import os
-#import pytest
+import pytest
 
-#import mlops_project.models.model
+import mlops_project.models.model
 
 #from tests import _PATH_DATA
 
