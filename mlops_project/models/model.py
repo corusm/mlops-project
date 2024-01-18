@@ -39,7 +39,7 @@ def train_model(cfg) -> Any:
 
     X, y, preproc_pipe, exp_pipe, splits = get_data(PATH_PROCESSED)
 
-    with wandb.init(project="62-train") as run:
+    with wandb.init(project="dtu-mlops-model-reg-62") as run:
 
         wandb.config = omegaconf.OmegaConf.to_container(
             cfg, resolve=True, throw_on_missing=True
@@ -75,19 +75,18 @@ def train_model(cfg) -> Any:
 
         learn.fit_one_cycle(n_epochs, lr_max=lr_max)
         
-        # Save model
-        learn.export("/models/patchTST.pt")
-        model_artifact = wandb.Artifact(name="model_62", type="model")
-        model_artifact.add_file("/models/patchTST.pt")
-        run.log_artifact(model_artifact)
-        run.link_artifact(model_artifact, "model-registry/registered_model")
+        # save model
+        learn.export("patchTST.pt")
 
-        # Save plots
+        model_artifact = wandb.Artifact(name="model_62", type="model")
+        model_artifact.add_file("patchTST.pt")
+        run.log_artifact(model_artifact)
+
         plot_splits(splits)
-        plt.tight_layout()  # fix label cutoff issue
-        plt.savefig("/models/splits.png")
+        plt.savefig("splits.png")
         plot_artifact = wandb.Artifact(name="plots_62", type="plot")
-        plot_artifact.add_file("/models/splits.png")
+        plot_artifact.add_file("splits.pt")
         run.log_artifact(plot_artifact)
 
-        run.finish()
+
+    # TODO make a plot

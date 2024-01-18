@@ -1,5 +1,5 @@
 wandb:
-  entity: docker_std
+  entity: az
   project: 62-train
   mode: online
 
