@@ -1,6 +1,6 @@
 import hydra
 import omegaconf
-from tsai.basics import *
+from tsai.basics import TSForecaster, load_object, mse, mae, np, os
 
 import wandb
 from fastai.callback.wandb import *
