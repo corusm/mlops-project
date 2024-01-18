@@ -57,4 +57,4 @@ jobs:
         run: docker pull ghcr.io/corusm/inference:latest
 
       - name: Deploy Docker container to GCP
-        run: gcloud compute instances create-with-container my-container --container-image ghcr.io/corusm/inference:latest --zone us-central1-a
+        run: gcloud compute instances create-with-container my-container --container-image ghcr.io/corusm/inference:latest --zone us-central1-a --container-port 8000
