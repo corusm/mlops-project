@@ -13,4 +13,7 @@ WORKDIR /
 RUN pip install -r requirements.txt --no-cache-dir
 # RUN pip install . --no-deps --no-cache-dir
 
-ENTRYPOINT ["python", "-u", "service.py"]
+# Expose the port the app runs on
+EXPOSE 8000
+
+CMD ["uvicorn", "--reload", "--port", "8000", "service:app"]
