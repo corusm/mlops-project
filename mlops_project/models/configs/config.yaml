@@ -2,3 +2,12 @@ wandb:
   entity: az
   project: 62-train
   mode: online
+parameters:
+  n_layers:
+      values: 3
+  d_model:
+      values: 16
+  d_ff:
+      values: 128
+  dropout:
+      values: 0.3
