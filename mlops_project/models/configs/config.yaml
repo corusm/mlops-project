@@ -1,0 +1,4 @@
+wandb:
+  entity: az
+  project: 62-train
+  mode: online
