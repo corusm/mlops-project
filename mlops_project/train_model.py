@@ -1,4 +1,4 @@
-from models.model import Forecaster
+import models.model
 
 
 def train():
