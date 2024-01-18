@@ -3,9 +3,9 @@
 # - train
 # - visualize
 
-import runpy
+import subprocess
 
 if __name__ == "__main__":
-    runpy.run_path("mlops_project/data/make_dataset.py")
-    runpy.run_path("mlops_project/train_model.py")
-    runpy.run_path("mlops_project/visualizations/visualize.py")
+    subprocess.run(["python", "mlops_project/data/make_dataset.py"], check=True)
+    subprocess.run(["python", "mlops_project/train_model.py"], check=True)
+    subprocess.run(["python", "mlops_project/visualizations/visualize.py"], check=True)
