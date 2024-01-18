@@ -79,9 +79,6 @@ def train_model(cfg) -> Any:
         learn.export("/models/patchTST.pt")
         model_artifact = wandb.Artifact(name="model_62", type="model")
         model_artifact.add_file("/models/patchTST.pt")
-        model_artifact.add_file("/data/processed/preproc_pipe.pkl")
-        model_artifact.add_file("/data/processed/exp_pipe.pkl")
-        model_artifact.add_file("/data/processed/splits.pkl")
         run.log_artifact(model_artifact)
         run.link_artifact(model_artifact, "model-registry/registered_model")
 
