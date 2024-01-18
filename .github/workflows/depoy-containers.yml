@@ -2,7 +2,7 @@ name: Docker Build and Push
 
 on:
   push:
-    branches: [ master, main, dev-docker-actions ]
+    branches: [ master, main ]
 
 jobs:
   build-and-push:
@@ -19,16 +19,9 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build and push Docker image train_model
+    - name: Build and push Docker GPU base-image
       uses: docker/build-push-action@v2
       with:
         push: true
-        file: ./dockerfiles/train_model.dockerfile
-        tags: ghcr.io/corusm/train_model:latest
-
-    - name: Build and push Docker image predict_model
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        file: ./dockerfiles/predict_model.dockerfile
-        tags: ghcr.io/corusm/predict_model:latest
+        file: ./dockerfiles/train_model.gpu.dockerfile
+        tags: ghcr.io/corusm/train-basemodel:latest
