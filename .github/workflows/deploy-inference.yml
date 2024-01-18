@@ -1,0 +1,60 @@
+name: Deploy Inference
+
+on:
+  push:
+    branches: [ main, master, dev-inference-service ]
+env:
+  PROJECT_ID: dtumlops-g62v2
+  PROJECT_NO: 311990494126
+
+jobs:
+  build-deploy:
+    # needs: [ train-and-report ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - uses: actions/checkout@v2
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push Docker image train_model
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        file: ./dockerfiles/inference.dockerfile
+        tags: ghcr.io/corusm/inference:latest
+
+ launch-runner:
+    needs: [ build-deploy ]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+    steps:
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          create_credentials_file: 'true'
+          workload_identity_provider: 'projects/${{env.PROJECT_NO}}/locations/global/workloadIdentityPools/gh-identity-pool/providers/gh-provider'
+          token_format: 'access_token'
+          service_account: 'gcp-github-access@${{env.PROJECT_ID}}.iam.gserviceaccount.com'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          version: '>= 363.0.0'
+
+      - name: Authenticate with GCP
+        run: gcloud auth configure-docker
+
+      - name: Pull Docker image from GHCR
+        run: docker pull ghcr.io/corusm/inference:latest
+
+      - name: Deploy Docker container to GCP
+        run: gcloud compute instances create-with-container my-container --container-image ghcr.io/corusm/inference:latest
