@@ -1,4 +1,5 @@
-from models.model import Forecaster
+from tsai.basics import *
+import models.model
 
 
 def train():
