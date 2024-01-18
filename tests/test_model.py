@@ -1,9 +1,9 @@
-import os
+#import os
 import pytest
 
 import mlops_project.models.model
 
-from tests import _PATH_DATA
+#from tests import _PATH_DATA
 
 
 class TestForecaster:
