@@ -1,9 +1,9 @@
 import hydra
 import omegaconf
-from tsai.basics import TSForecaster, load_object, mse, mae, np, os, plot_splits
+from tsai.basics import *
 
 import wandb
-from fastai.callback.wandb import WandbCallback
+from fastai.callback.wandb import *
 
 import matplotlib.pyplot as plt
 
