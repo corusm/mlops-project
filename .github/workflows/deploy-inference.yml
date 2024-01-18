@@ -57,4 +57,4 @@ jobs:
         run: docker pull ghcr.io/corusm/inference:latest
 
       - name: Deploy Docker container to GCP
-        run:  gcloud run deploy ml-inference --image ghcr.io/corusm/inference:latest --platform managed --region us-central1-a  --allow-unauthenticated
+        run:  gcloud run deploy ml-inference --image ghcr.io/corusm/inference:latest --platform managed --region us-central1  --allow-unauthenticated
