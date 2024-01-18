@@ -1,9 +1,10 @@
-from tsai.basics import *
-import models.model
+from models.model import Forecaster
 
 
 def train():
-    models.model.train_model()
+    # TODO add arguments to allow parameter tuning
+    model = Forecaster()
+    model.train_model()
 
 
 if __name__ == "__main__":
