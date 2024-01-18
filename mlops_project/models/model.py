@@ -57,6 +57,22 @@ def train_model(cfg) -> None:
             padding_patch=True,  # padding_patch
         )
 
+    def get_data(self, path):
+        feature_target_data = np.load(os.path.join(path, "processed.npz"))
+        X = feature_target_data["array1"]
+        y = feature_target_data["array2"]
+
+        preproc_pipe = load_object(os.path.join(path, "preproc_pipe.pkl"))
+        exp_pipe = load_object(os.path.join(path, "exp_pipe.pkl"))
+        splits = load_object(os.path.join(path, "splits.pkl"))
+
+        return X, y, preproc_pipe, exp_pipe, splits
+
+    def train_model(self):
+        PATH_PROCESSED = "data/processed"
+
+        X, y, preproc_pipe, exp_pipe, splits = self.get_data(PATH_PROCESSED)
+
         learn = TSForecaster(
             X,
             y,
