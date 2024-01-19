@@ -297,7 +297,7 @@ https://github.com/corusm/mlops-project/actions/runs/7535717724/job/20512110831?
 >
 > Answer:
 
---- We used config files ---
+Experiments are configures using Hydra. A main config file contains default parameters and general infromation, sweeps can be run via the command line using a combination of Hydra and WandB. Hyperparameter ranges are defined in a Hydra yaml file and invoked using WandB sweeps. Because of the time series library used, some hyperparameters are still hardcoded.
 
 ### Question 13
 
@@ -312,7 +312,7 @@ https://github.com/corusm/mlops-project/actions/runs/7535717724/job/20512110831?
 >
 > Answer:
 
----Our workflow is pretty straightforward: code on GitHub gets trained in the cloud, and then the trained model, along with all the details, gets saved to wandb. If you want to rerun an experiment, just grab the specific code version from GitHub, pull the model parameters and hyperparameter setup from wandb, and run it all again in the cloud. This setup not only keeps our data safe and sound but also makes it quite simple to replicate any experiment. We also used config files for hyperparameters, which helped us to handle them in an organized way, keeping our experiment settings clear and easy to adjust. ---
+Our workflow is pretty straightforward: code on GitHub gets trained in the cloud, and then the trained model, along with all the details like the exported model, used data and parameters, gets saved to wandb. If you want to rerun an experiment, just grab the specific code version from GitHub, pull the model parameters and hyperparameter setup from wandb, and run it all again in the cloud. This setup not only keeps our data safe and sound but also makes it quite simple to replicate any experiment. We also used Hydra config files for hyperparameters (which are also saved to wandb), which helped us to handle them in an organized way, keeping our experiment settings clear and easy to adjust.
 
 ### Question 14
 
@@ -329,7 +329,11 @@ https://github.com/corusm/mlops-project/actions/runs/7535717724/job/20512110831?
 >
 > Answer:
 
---- question 14 fill here ---
+The core metric is the val/train loss chart, which is used to evaluate a model. Further metrics include the learning rate, mse, and some performance metrics (fig. 1, 2). In addition, the model files are stored in the WandB model registry (fig. 3), ensuring reproducability and no loss of data. Screenshots of the WandB panel are attached.
+
+![fig 1](figures/wandb1.png "WandB panel 1")
+![fig 2](figures/wandb2.png "WandB panel 2")
+![fig 3](figures/wandb3.png "WandB panel 3")
 
 ### Question 15
 
