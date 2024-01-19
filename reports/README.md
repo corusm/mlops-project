@@ -53,6 +53,7 @@ end of the project.
 * [X] Create a git repository
 * [X] Make sure that all team members have write access to the github repository
 * [X] Create a dedicated environment for you project to keep track of your packages
+* [X] Create a dedicated environment for you project to keep track of your packages
 * [X] Create the initial file structure using cookiecutter
 * [X] Fill out the `make_dataset.py` file such that it downloads whatever data you need and
 * [X] Add a model file and a training script and get that running
@@ -65,7 +66,10 @@ end of the project.
 * [X] Write one or multiple configurations files for your experiments
 * [X] Used Hydra to load the configurations and manage your hyperparameters
 * [X] When you have something that works somewhat, remember at some point to to some profiling and see if
+* [X] Used Hydra to load the configurations and manage your hyperparameters
+* [X] When you have something that works somewhat, remember at some point to to some profiling and see if
       you can optimize your code
+* [X] Use Weights & Biases to log training progress and other important metrics/artifacts in your code. Additionally,
 * [X] Use Weights & Biases to log training progress and other important metrics/artifacts in your code. Additionally,
       consider running a hyperparameter optimization sweep.
 * [X] Use Pytorch-lightning (if applicable) to reduce the amount of boilerplate in your code
@@ -78,15 +82,15 @@ end of the project.
 * [X] Get some continuous integration running on the github repository
 * [X] Create a data storage in GCP Bucket for you data and preferable link this with your data version control setup
 * [X] Create a trigger workflow for automatically building your docker images
-* [ ] Get your model training in GCP using either the Engine or Vertex AI
-* [ ] Create a FastAPI application that can do inference using your model
-* [ ] If applicable, consider deploying the model locally using torchserve
-* [ ] Deploy your model in GCP using either Functions or Run as the backend
+* [X] Get your model training in GCP using either the Engine or Vertex AI
+* [X] Create a FastAPI application that can do inference using your model
+* [X] If applicable, consider deploying the model locally using torchserve
+* [X] Deploy your model in GCP using either Functions or Run as the backend
 
 ### Week 3
 
 * [ ] Check how robust your model is towards data drifting
-* [ ] Setup monitoring for the system telemetry of your deployed model
+* [X] Setup monitoring for the system telemetry of your deployed model
 * [ ] Setup monitoring for the performance of your deployed model
 * [ ] If applicable, play around with distributed data loading
 * [ ] If applicable, play around with distributed model training
@@ -94,7 +98,7 @@ end of the project.
 
 ### Additional
 
-* [ ] Revisit your initial project description. Did the project turn out as you wanted?
+* [X] Revisit your initial project description. Did the project turn out as you wanted?
 * [X] Make sure all group members have a understanding about all parts of the project
 * [X] Uploaded all your code to github
 
@@ -242,8 +246,7 @@ end of the project.
 >
 > Answer:
 
---- We did make use of DVC in the following way:
- ---
+--- We did make use of DVC in the following way: DVC is used in two places - github actions and in the cloud during model training. The data are stored in the bucket in google cloud. It greatly improved the way we are handling our data, since we are sure that we are using the same data in CI and in model training, morever it freed github space from data. Although, our data didn't take tremendous amount of disk space at this stage of the project we are somehow prodected from the case of traing the model on larger datasets.---
 
 ### Question 11
 
@@ -275,8 +278,7 @@ We are also continously checking our code compatibilty with good coding practici
 3. running 'ruff check' and 'ruff format' on the entire code.
 
 An example of triggered workflow can be seen here:
-https://github.com/corusm/mlops-project/actions/runs/7535717724/job/20512110831?pr=9
- ---
+https://github.com/corusm/mlops-project/actions/runs/7535717724/job/20512110831?pr=9 ---
 
 ## Running code and tracking experiments
 
@@ -295,7 +297,7 @@ https://github.com/corusm/mlops-project/actions/runs/7535717724/job/20512110831?
 >
 > Answer:
 
---- question 12 fill here ---
+--- We used config files ---
 
 ### Question 13
 
@@ -310,7 +312,7 @@ https://github.com/corusm/mlops-project/actions/runs/7535717724/job/20512110831?
 >
 > Answer:
 
---- question 13 fill here ---
+---Our workflow is pretty straightforward: code on GitHub gets trained in the cloud, and then the trained model, along with all the details, gets saved to wandb. If you want to rerun an experiment, just grab the specific code version from GitHub, pull the model parameters and hyperparameter setup from wandb, and run it all again in the cloud. This setup not only keeps our data safe and sound but also makes it quite simple to replicate any experiment. We also used config files for hyperparameters, which helped us to handle them in an organized way, keeping our experiment settings clear and easy to adjust. ---
 
 ### Question 14
 
@@ -342,11 +344,16 @@ https://github.com/corusm/mlops-project/actions/runs/7535717724/job/20512110831?
 >
 > Answer:
 
---- For our project we developed several docker images: one for training and one for inference.
+--- For our project, we developed several Docker images:
 
-Docker image for training: Inside this container we are running three scripsts one after another (make_dataset -> train_model -> visualize). Link to the docker:
+Docker images for training: Inside one container, we run three scripts sequentially (make_dataset -> train_model -> visualize). Other images are running in the cloud.
 
-Docker image for inference: TODO add description (and Docker)  ---
+Docker image for inference: This Dockerfile is used to deploy an app in the cloud.
+
+Building all of the Dockerfiles is managed via GitHub Actions. Dockerfiles for training are always built. When the training is finished, the Docker image for deployment is built. 
+Links to images: TODO
+
+Commands: TODO---
 
 ### Question 16
 
@@ -437,7 +444,12 @@ In terms of profiling - we checked our code once, CPU spends the most time on ru
 >
 > Answer:
 
---- question 22 fill here ---
+--- 
+We deployed our model both locally and on the cloud, with the primary goal of deploying it within GCP. We initiated cloud deployment after successfully deploying the model locally. Our model is automatically deployed each time the training process completes in the cloud, with all actions managed via GitHub Actions. To interact with our deployed model, one needs to upload a .csv file that meets certain criteria. The simplest method is using the following command
+
+curl -X 'POST' 'https://inference-d4wzaxb3la-uc.a.run.app/predict' -H 'accept: application/json' -H 'Content-Type: multipart/form-data' -F 'data=@cex4WindDataInterpolated.csv;type=text/csv' > out.png
+
+This command requires a .csv file, and the resulting out.png will contain several predictions. It's important to note that the endpoint mentioned above is from an older sample and may not be operational now, as our cloud service has a specific set lifespan. ---
 
 ### Question 23
 
@@ -487,7 +499,15 @@ In terms of profiling - we checked our code once, CPU spends the most time on ru
 >
 > Answer:
 
---- question 25 fill here ---
+--- ![Diagram](figures/mlops_diagram.jpeg)
+
+The diagram shows overall architecture of our system.
+
+The starting point of our setup is our GitHub repository, specifically the raw code. We utilize several frameworks, notably PyTorch and tsai, and the entire project template was initialized using Cookiecutter. We also make use of tools like Conda and Hydra for managing environments and configurations, respectively. Our code goes through testing via GitHub Actions, which includes tests of training and visualization process, coverage checks, etc.
+
+Additionally, we build several Docker images; some are built in the GCP cloud, triggered via GitHub. For both GCP and GitHub tests, we use DVC for data storage, placed in a GCP bucket. After successful training of a specific model, the parameters are saved to Weights & Biases (wandb), and we deploy our model using a Docker image. During this deployment phase, we monitor inference with our service. The user-service communication is facilitated via FastAPI.
+
+All of the cloud setup can be easly reproduced with terraform, this setup is included in infrastructure directory. Basically, by following the gcp_dvc_bucket.tf is a step by step instruction how to set up exactly same bucket in the google cloud, while svc-config.tf allows to reproduce the exact cloud setup. ---
 
 ### Question 26
 
