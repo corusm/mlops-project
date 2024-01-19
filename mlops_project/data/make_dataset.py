@@ -121,8 +121,8 @@ def process_data(path_to_raw_data) -> ndarray:
 
 
 if __name__ == "__main__":
-    PATH_RAW = "data/raw"
-    PATH_PROCESSED = "data/processed"
+    PATH_RAW = "/__w/mlops-project/mlops-project/data/raw"
+    PATH_PROCESSED = "/__w/mlops-project/mlops-project/data/processed"
 
     X, y, preproc_pipe, exp_pipe, splits = process_data(PATH_RAW)
 
