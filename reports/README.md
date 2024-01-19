@@ -354,10 +354,21 @@ Docker images for training: Inside one container, we run three scripts sequentia
 
 Docker image for inference: This Dockerfile is used to deploy an app in the cloud.
 
-Building all of the Dockerfiles is managed via GitHub Actions. Dockerfiles for training are always built. When the training is finished, the Docker image for deployment is built. 
-Links to images: TODO
+Building all of the Dockerfiles is managed via GitHub Actions (see `.github/workflows`). Dockerfiles for training are always built. When the training is finished, the Docker image for deployment is built. 
+Links to images: 
+- ghcr.io/corusm/train-basemodel:latest (public available, `dockerfiles/train_model.gpu.dockerfile`)
+- gcr.io/dtumlops-g62v2/inference:latest (build via github actions and pushed to gcp registry, `dockerfile/inference.dockerfile`)
 
-Commands: TODO---
+Commands: 
+docker build -t ghcr.io/corusm/train-basemodel:latest -f ./dockerfiles/train_model.gpu.dockerfile .
+docker push ghcr.io/corusm/train-basemodel:latest
+
+docker build -t gcr.io/dtumlops-g62v2/inference:latest -f ./dockerfiles/inference.dockerfile --build-arg HTTP_PORT=8080 .
+docker push gcr.io/dtumlops-g62v2/inference:latest
+
+`but all commands are automated via github actions`
+
+---
 
 ### Question 16
 
@@ -390,6 +401,19 @@ In terms of profiling - we checked our code once, CPU spends the most time on ru
 >
 > Answer:
 
+1. **Google Cloud Storage (GCS)**: GCS, as seen in the `google_storage_bucket`, is used for storing and accessing data on Google's cloud. It provides a secure and scalable solution for data storage, including but not limited to, storing the artifacts and datasets required for machine learning operations.
+
+2. **Google Cloud IAM (Identity and Access Management)**: Demonstrated by the `google_service_account` and `google_project_iam_member` resources, IAM is used to manage access control and permissions. It enables the creation of service accounts and assigns specific roles to these accounts, thereby controlling what actions they can perform within the GCP environment.
+
+3. **Google Cloud Run**: Indicated in the `deploy-cloudrun` action, Cloud Run is a managed compute platform that enables the deployment of containerized applications. It's used here to deploy the inference service, providing a scalable and serverless environment for application execution.
+
+4. **Google Cloud Build**: While not directly referenced, Cloud Build is implied in the Docker image build and push process. It's a service that executes your builds on Google Cloud Platform infrastructure, automating the build, test, and deployment process.
+
+5. **Google Container Registry (GCR)**: Implied in the `docker/build-push-action`, GCR is a Docker container registry for storing, managing, and securing Docker container images. It's used here to store the built Docker images which are then deployed to Cloud Run.
+
+6. **Workload Identity Federation**: This is indicated by the `workload_identity_provider` in GitHub Actions workflows. It allows GitHub Actions to impersonate a GCP service account, enabling secure authentication and authorization for automated workflows.
+
+7. **Google Compute Engine:** Used in the CML setup to provide scalable and customizable compute capacity. It allows you to run and manage virtual machines on Google's infrastructure. In our project, it was used to deploy a runner with specific hardware (`nvidia-tesla-k80`) for machine learning tasks.
 --- question 17 fill here ---
 
 ### Question 18
@@ -404,6 +428,9 @@ In terms of profiling - we checked our code once, CPU spends the most time on ru
 > *using a custom container: ...*
 >
 > Answer:
+1. **Runner VMs for GitHub Actions**: We employed Compute Engine VMs to host self-hosted runners for GitHub Actions, particularly for the machine learning model training and deployment. This is evident in the CML (Continuous Machine Learning) workflow, where a VM is dynamically launched on GCP to run the training job. The VM specification used was `n1-standard-1` with an additional `nvidia-tesla-k80` GPU, as specified in the `--cloud-type` parameter. This setup provided a balanced mix of CPU and GPU resources, suitable for our machine learning tasks.
+
+2. **Custom Container for Training**: The training job was executed in a custom Docker container (`ghcr.io/corusm/train-basemodel:latest`), which was run on the Compute Engine VM. In the container we then pulled the data via DVC, installed requirements, and ran the training script. This was very lightweight, as the container wasn't changed very often, since we installed requirements etc. post-build.
 
 --- question 18 fill here ---
 
@@ -414,6 +441,9 @@ In terms of profiling - we checked our code once, CPU spends the most time on ru
 >
 > Answer:
 
+![this figure](figures/bucket.png)
+![that figure](figures/bucket1.png)
+
 --- question 19 fill here ---
 
 ### Question 20
@@ -423,6 +453,9 @@ In terms of profiling - we checked our code once, CPU spends the most time on ru
 >
 > Answer:
 
+One image is stored in the github container registry and the other here in the GCP registry.
+![that figure](figures/registry.png)
+
 --- question 20 fill here ---
 
 ### Question 21
@@ -431,6 +464,9 @@ In terms of profiling - we checked our code once, CPU spends the most time on ru
 > **your project. You can take inspiration from [this figure](figures/build.png).**
 >
 > Answer:
+
+We didn't use cloudbuild but terraform and github actions as this was more flexible for future cloud setups and better integrated in our CI/CD pipeline.
+![that figure](figures/cloudbuild.png)
 
 --- question 21 fill here ---
 
@@ -468,6 +504,8 @@ This command requires a .csv file, and the resulting out.png will contain severa
 >
 > Answer:
 
+We added a prometheus client to the FastAPI and had basic metrics within the managed cloud runner. Logs could be inspected there aswell easily. For a bigger setup we would have deployed a prometheus and grafana instance to monitor our application in a better way. Additionally projects like "great expectations" could help improve conitnuous data integration for our ML model.
+
 --- question 23 fill here ---
 
 ### Question 24
@@ -481,6 +519,9 @@ This command requires a .csv file, and the resulting out.png will contain severa
 > *costing the most was ... due to ...*
 >
 > Answer:
+
+We spent 63.56€ in total. The biggest cost factor was the GPU within CML runner for accelerated training, but it helped us a lot, since training on every PC of us way way slower and sweep didn't really work well. But on the cloud it did.
+![that figure](figures/reports.png)
 
 --- question 24 fill here ---
 
