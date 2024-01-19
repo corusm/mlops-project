@@ -1,0 +1,56 @@
+name: Deploy Inference
+
+on:
+  push:
+    branches: [ main, master, dev-inference-service ]
+env:
+  PROJECT_ID: dtumlops-g62v2
+  PROJECT_NO: 311990494126
+
+jobs:
+  launch-runner:
+    # needs: [ train-and-report ]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          create_credentials_file: 'true'
+          workload_identity_provider: 'projects/${{env.PROJECT_NO}}/locations/global/workloadIdentityPools/gh-identity-pool/providers/gh-provider'
+          token_format: 'access_token'
+          service_account: 'gcp-github-access@${{env.PROJECT_ID}}.iam.gserviceaccount.com'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          version: '>= 363.0.0'
+
+      - name: Authenticate with GCP
+        run: gcloud auth configure-docker
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: gcr.io/dtumlops-g62v2/inference:latest
+          file: ./dockerfiles/inference.dockerfile
+          build-args: |
+            HTTP_PORT=8080
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@main
+        with:
+          image: gcr.io/dtumlops-g62v2/inference:latest
+          service: inference
+          region: us-central1
+          platform: managed
+          allow-unauthenticated: true
+          flags: |
+            --max-instances=1
+            --cpu=2
+            --memory=2Gi
