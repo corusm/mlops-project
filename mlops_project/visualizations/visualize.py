@@ -2,13 +2,13 @@ from tsai.inference import load_learner
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from tsai.basics import sys, Path, to_np, pd, plot_forecast, ndarray
 
-from models.model import Forecaster
+import models.model
 
 sys.path.append(str(Path(__file__).parents[1]))
 
 
 def test_split(X, y, splits) -> ndarray:
-    learn = load_learner("models/patchTST.pt")
+    learn = load_learner("/mlops_project/models/patchTST.pt")
     y_test_preds, *_ = learn.get_X_preds(X[splits[2]])
     y_test_preds = to_np(y_test_preds)
     print(f"y_test_preds.shape: {y_test_preds.shape}")
@@ -32,9 +32,8 @@ def visualize_predictions(splits, y_test_preds) -> None:
 
 
 if __name__ == "__main__":
-    model_to_vis = Forecaster()
-    path_to_processed_data = "data/processed"
-    X, y, _, _, splits = model_to_vis.get_data(path_to_processed_data)
+    path_to_processed_data = "/mlops_project/data/processed"
+    X, y, _, _, splits = models.model.get_data(path_to_processed_data)
 
     y_test_preds = test_split(X, y, splits)
     visualize_predictions(splits, y_test_preds)

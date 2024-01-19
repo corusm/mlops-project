@@ -1,0 +1,9 @@
+wandb:
+  entity: docker_std
+  project: 62-train
+  mode: online
+
+n_layers: 3
+d_model: 16
+d_ff: 128
+dropout: 0.3
