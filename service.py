@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 from tsai.basics import *
+from prometheus_fastapi_instrumentator import Instrumentator
 
 
 app = FastAPI()
@@ -68,3 +69,5 @@ async def load_model(data: UploadFile = File(...)):
 
     # Return the plot as a direct image response from memory
     return StreamingResponse(buf, media_type="image/png")
+
+Instrumentator().instrument(app).expose(app)
