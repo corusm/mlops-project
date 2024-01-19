@@ -50,3 +50,8 @@ jobs:
           region: us-central1
           platform: managed
           allow-unauthenticated: true
+          flags: |
+            --vpc-egress=all-traffic
+            --max-instances=1
+            --cpu=2
+            --memory=2Gi

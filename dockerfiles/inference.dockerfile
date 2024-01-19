@@ -8,6 +8,7 @@ RUN apt update && \
 COPY requirements.txt requirements.txt
 COPY pyproject.toml pyproject.toml
 COPY service.py service.py
+COPY models/ models/
 
 WORKDIR /
 RUN pip install -r requirements.txt --no-cache-dir
