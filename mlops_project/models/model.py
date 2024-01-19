@@ -70,7 +70,7 @@ def train_model(cfg) -> None:
             cbs=WandbCallback(),
         )
 
-        n_epochs = 20
+        n_epochs = 5
         lr_max = 0.0025
 
         learn.fit_one_cycle(n_epochs, lr_max=lr_max)
