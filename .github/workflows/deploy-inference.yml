@@ -1,8 +1,9 @@
 name: Deploy Inference
 
 on:
-  push:
-    branches: [ main, master, dev-actions ]
+  workflow_run:
+    workflows: ['CML']
+    types: [completed]
 env:
   PROJECT_ID: dtumlops-g62v2
   PROJECT_NO: 311990494126
