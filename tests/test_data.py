@@ -2,8 +2,30 @@ import os
 
 import pytest
 import numpy as np
+import subprocess
 
-from tests import _PATH_DATA
+from tests import _PATH_DATA, _PROJECT_ROOT
+
+
+@pytest.fixture(scope="session", autouse=True)
+def prepare_data():
+    """
+    This fixture runs the make_dataset.py script before any tests are executed.
+    It ensures that the raw data is processed and the results are stored in the expected directory.
+    """
+    if not os.path.exists(_PATH_DATA):
+        os.makedirs(_PATH_DATA, exist_ok=True)
+
+    # Assuming 'make_dataset.py' is in the current directory
+    make_dataset_script = os.path.join(_PROJECT_ROOT, "mlops_project/data/make_dataset.py")
+    assert os.path.isfile(make_dataset_script), f"{make_dataset_script} does not exist."
+
+    # Run the make_dataset.py script
+    subprocess.run(["python", make_dataset_script], check=True)
+
+    # Ensure that the processed data file is created
+    processed_file = os.path.join(_PATH_DATA, "processed/processed.npz")
+    assert os.path.isfile(processed_file), f"Processed data file {processed_file} was not created."
 
 
 @pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
