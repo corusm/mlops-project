@@ -35,7 +35,7 @@ def get_data(path) -> tuple:
 
 @hydra.main(config_path="configs", config_name="config")
 def train_model(cfg) -> None:
-    PATH_PROCESSED = "/data/processed"
+    PATH_PROCESSED = "data/processed"
 
     X, y, preproc_pipe, exp_pipe, splits = get_data(PATH_PROCESSED)
 
@@ -76,21 +76,21 @@ def train_model(cfg) -> None:
         learn.fit_one_cycle(n_epochs, lr_max=lr_max)
         
         # Save model
-        learn.export("/models/patchTST.pt")
+        learn.export("models/patchTST.pt")
         model_artifact = wandb.Artifact(name="model_62", type="model")
-        model_artifact.add_file("/models/patchTST.pt")
-        model_artifact.add_file("/data/processed/preproc_pipe.pkl")
-        model_artifact.add_file("/data/processed/exp_pipe.pkl")
-        model_artifact.add_file("/data/processed/splits.pkl")
+        model_artifact.add_file("models/patchTST.pt")
+        model_artifact.add_file("data/processed/preproc_pipe.pkl")
+        model_artifact.add_file("data/processed/exp_pipe.pkl")
+        model_artifact.add_file("data/processed/splits.pkl")
         run.log_artifact(model_artifact)
         run.link_artifact(model_artifact, "model-registry/registered_model")
 
         # Save plots
         plot_splits(splits)
         plt.tight_layout()  # fix label cutoff issue
-        plt.savefig("/models/splits.png")
+        plt.savefig("models/splits.png")
         plot_artifact = wandb.Artifact(name="plots_62", type="plot")
-        plot_artifact.add_file("/models/splits.png")
+        plot_artifact.add_file("models/splits.png")
         run.log_artifact(plot_artifact)
 
         run.finish()
