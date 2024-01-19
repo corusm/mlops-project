@@ -35,7 +35,7 @@ def get_data(path) -> tuple:
 
 @hydra.main(config_path="configs", config_name="config")
 def train_model(cfg) -> None:
-    PATH_PROCESSED = "data/processed"
+    PATH_PROCESSED = "/__w/mlops-project/mlops-project/mlops_project/data/processed"
 
     X, y, preproc_pipe, exp_pipe, splits = get_data(PATH_PROCESSED)
 
