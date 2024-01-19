@@ -1,4 +1,4 @@
-name: "Run tests"
+name: "Run tests and coverage"
 
 on:
   push:
@@ -70,8 +70,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements_tests.txt
+        pip install pytest-cov
+        pip install pycobertura
 
     - name: Test with pytest
       run: |
         pip install pytest
         pytest -v
+
+    - name: Test with coverage
+      run: |
+        pytest --cov=mlops_project --cov-report=xml tests/
+
+    - name: Display coverage
+      run: |
+        coverage report
+        coverage xml
+        pycobertura show --format=text coverage.xml

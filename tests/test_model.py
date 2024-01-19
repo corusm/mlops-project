@@ -1,9 +1,9 @@
-#import os
-#import pytest
+# import os
+# import pytest
 
-#import mlops_project.models.model
+# import mlops_project.models.model
 
-#from tests import _PATH_DATA
+# from tests import _PATH_DATA
 
 
 class TestForecaster:
@@ -15,9 +15,9 @@ class TestForecaster:
 
     def test_training_process(self):
         # This test might take longer, consider running with a smaller dataset or fewer epochs
-        #try:
+        # try:
         #    mlops_project.models.model.train_model()
-        #except Exception as e:
+        # except Exception as e:
         #    pytest.fail(f"Training failed with exception: {e}")
         return
 

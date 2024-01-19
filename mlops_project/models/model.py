@@ -21,6 +21,7 @@ train_model(): Trains the forecasting model using the TSForecaster from tsai.
                 The model is trained and saved to models directory.
 """
 
+
 def get_data(path) -> tuple:
     feature_target_data = np.load(os.path.join(path, "processed.npz"))
     X = feature_target_data["array1"]
@@ -40,10 +41,7 @@ def train_model(cfg) -> None:
     X, y, preproc_pipe, exp_pipe, splits = get_data(PATH_PROCESSED)
 
     with wandb.init(project="62-train") as run:
-
-        wandb.config = omegaconf.OmegaConf.to_container(
-            cfg, resolve=True, throw_on_missing=True
-        )
+        wandb.config = omegaconf.OmegaConf.to_container(cfg, resolve=True, throw_on_missing=True)
 
         arch_config = dict(
             n_layers=wandb.config["n_layers"],  # number of encoder layers
@@ -51,7 +49,9 @@ def train_model(cfg) -> None:
             d_model=wandb.config["d_model"],  # dimension of model
             d_ff=wandb.config["d_ff"],  # dimension of fully connected network
             attn_dropout=0.0,  # dropout applied to the attention weights
-            dropout=wandb.config["dropout"],  # dropout applied to all linear layers in the encoder except q,k&v projections
+            dropout=wandb.config[
+                "dropout"
+            ],  # dropout applied to all linear layers in the encoder except q,k&v projections
             patch_len=24,  # length of the patch applied to the time series to create patches
             stride=2,  # stride used when creating patches
             padding_patch=True,  # padding_patch
@@ -67,14 +67,14 @@ def train_model(cfg) -> None:
             arch="PatchTST",
             arch_config=arch_config,
             metrics=[mse, mae],
-            cbs=WandbCallback()
+            cbs=WandbCallback(),
         )
 
         n_epochs = 20
         lr_max = 0.0025
 
         learn.fit_one_cycle(n_epochs, lr_max=lr_max)
-        
+
         # Save model
         learn.export("/mlops_project/models/patchTST.pt")
         model_artifact = wandb.Artifact(name="model_62", type="model")
