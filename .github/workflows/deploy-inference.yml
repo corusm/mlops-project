@@ -40,7 +40,7 @@ jobs:
           tags: gcr.io/dtumlops-g62v2/inference:latest
           file: ./dockerfiles/inference.dockerfile
           build-args: |
-            HTTP_PORT=80
+            HTTP_PORT=8080
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@main

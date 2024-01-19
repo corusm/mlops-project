@@ -14,6 +14,6 @@ RUN pip install -r requirements.txt --no-cache-dir
 # RUN pip install . --no-deps --no-cache-dir
 
 # Expose the port the app runs on
-EXPOSE 80
+EXPOSE 8080
 
-CMD ["uvicorn", "--reload", "--port", "80", "service:app"]
+CMD ["uvicorn", "--reload", "--port", "8080", "service:app"]
