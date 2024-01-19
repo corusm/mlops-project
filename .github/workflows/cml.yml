@@ -1,0 +1,77 @@
+name: CML
+
+on:
+  push:
+    branches: [ main, dev-cont-deploy ]
+env:
+  PROJECT_ID: dtumlops-g62v2
+  PROJECT_NO: 311990494126
+
+jobs:
+  launch-runner:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: iterative/setup-cml@v1
+      - uses: actions/checkout@v3
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          create_credentials_file: 'true'
+          workload_identity_provider: 'projects/${{env.PROJECT_NO}}/locations/global/workloadIdentityPools/gh-identity-pool/providers/gh-provider'
+          token_format: 'access_token'
+          service_account: 'gcp-github-access@${{env.PROJECT_ID}}.iam.gserviceaccount.com'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          version: '>= 363.0.0'
+
+      - name: Deploy runner on GCP
+        env:
+          REPO_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: |
+          cml runner launch \
+              --cloud=gcp \
+              --cloud-region=europe-west1-b \
+              --cloud-type=n1-standard-1+nvidia-tesla-k80*1 \
+              --idle-timeout=6000 \
+              --reuse \
+              --labels=cml-gpu 
+  train-and-report:
+    needs: launch-runner
+    runs-on: [self-hosted, cml-gpu]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    timeout-minutes: 50400 # 35 days
+    container:
+      image: ghcr.io/corusm/train-basemodel:latest
+      options: --gpus all
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-python@v4
+      - uses: iterative/setup-dvc@v1
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          create_credentials_file: 'true'
+          workload_identity_provider: 'projects/${{env.PROJECT_NO}}/locations/global/workloadIdentityPools/gh-identity-pool/providers/gh-provider'
+          token_format: 'access_token'
+          service_account: 'gcp-github-access@${{env.PROJECT_ID}}.iam.gserviceaccount.com'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          version: '>= 363.0.0'
+      - name: Train model
+        env:
+          REPO_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
+        run: |
+          dvc pull
+          ls -la
+          python mlops_project/train_model_for_docker.py
