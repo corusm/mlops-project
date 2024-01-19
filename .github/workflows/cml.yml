@@ -2,7 +2,7 @@ name: CML
 
 on:
   push:
-    branches: [ main, master, dev-actions ]
+    branches: [ main, master ]
 env:
   PROJECT_ID: dtumlops-g62v2
   PROJECT_NO: 311990494126
