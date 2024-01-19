@@ -355,7 +355,16 @@ Links to images:
 - ghcr.io/corusm/train-basemodel:latest (public available, `dockerfiles/train_model.gpu.dockerfile`)
 - gcr.io/dtumlops-g62v2/inference:latest (build via github actions and pushed to gcp registry, `dockerfile/inference.dockerfile`)
 
-Commands: TODO---
+Commands: 
+docker build -t ghcr.io/corusm/train-basemodel:latest -f ./dockerfiles/train_model.gpu.dockerfile .
+docker push ghcr.io/corusm/train-basemodel:latest
+
+docker build -t gcr.io/dtumlops-g62v2/inference:latest -f ./dockerfiles/inference.dockerfile --build-arg HTTP_PORT=8080 .
+docker push gcr.io/dtumlops-g62v2/inference:latest
+
+`but all commands are automated via github actions`
+
+---
 
 ### Question 16
 
