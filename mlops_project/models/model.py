@@ -76,9 +76,9 @@ def train_model(cfg) -> None:
         learn.fit_one_cycle(n_epochs, lr_max=lr_max)
 
         # Save model
-        learn.export("patchTST.pt")
+        learn.export("/__w/mlops-project/mlops-project/patchTST.pt")
         model_artifact = wandb.Artifact(name="model_62", type="model")
-        model_artifact.add_file("patchTST.pt")
+        model_artifact.add_file("/__w/mlops-project/mlops-project/patchTST.pt")
         model_artifact.add_file("/__w/mlops-project/mlops-project/data/processed/preproc_pipe.pkl")
         model_artifact.add_file("/__w/mlops-project/mlops-project/data/processed/exp_pipe.pkl")
         model_artifact.add_file("/__w/mlops-project/mlops-project/data/processed/splits.pkl")
