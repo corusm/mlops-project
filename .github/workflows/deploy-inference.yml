@@ -2,14 +2,14 @@ name: Deploy Inference
 
 on:
   push:
-    branches: [ main, master, dev-inference-service ]
+    branches: [ main, master, dev-actions ]
 env:
   PROJECT_ID: dtumlops-g62v2
   PROJECT_NO: 311990494126
 
 jobs:
-  launch-runner:
-    # needs: [ train-and-report ]
+  launch-inference:
+    needs: [ train-and-report ]
     permissions:
       contents: 'read'
       id-token: 'write'

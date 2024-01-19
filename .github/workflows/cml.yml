@@ -2,7 +2,7 @@ name: CML
 
 on:
   push:
-    branches: [ main, dev-cont-deploy ]
+    branches: [ main, master, dev-actions ]
 env:
   PROJECT_ID: dtumlops-g62v2
   PROJECT_NO: 311990494126
@@ -42,7 +42,7 @@ jobs:
               --reuse \
               --labels=cml-gpu 
   train-and-report:
-    needs: launch-runner
+    needs: [ launch-runner, build-and-push ]
     runs-on: [self-hosted, cml-gpu]
     permissions:
       contents: 'read'
