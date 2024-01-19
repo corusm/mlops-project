@@ -2,7 +2,7 @@ name: CML
 
 on:
   push:
-    branches: [ main, dev-cont-deploy ]
+    branches: [ main, master ]
 env:
   PROJECT_ID: dtumlops-g62v2
   PROJECT_NO: 311990494126
@@ -41,8 +41,30 @@ jobs:
               --idle-timeout=6000 \
               --reuse \
               --labels=cml-gpu 
+
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - uses: actions/checkout@v2
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push Docker GPU base-image
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        file: ./dockerfiles/train_model.gpu.dockerfile
+        tags: ghcr.io/corusm/train-basemodel:latest
+
   train-and-report:
-    needs: launch-runner
+    needs: [ launch-runner, build-and-push ]
     runs-on: [self-hosted, cml-gpu]
     permissions:
       contents: 'read'
@@ -73,5 +95,4 @@ jobs:
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
         run: |
           dvc pull
-          ls -la
           python mlops_project/train_model_for_docker.py
