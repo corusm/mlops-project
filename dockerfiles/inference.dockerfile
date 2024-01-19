@@ -17,4 +17,4 @@ RUN pip install -r requirements.txt --no-cache-dir
 # Expose the port the app runs on
 EXPOSE 8080
 
-CMD ["uvicorn", "--reload", "--port", "8080", "service:app"]
+CMD exec uvicorn service:app --port 8080 --host 0.0.0.0 --workers 1
